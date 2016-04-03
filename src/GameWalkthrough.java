@@ -47,7 +47,7 @@ public class GameWalkthrough extends JPanel {
 	}
 
 	public void startGame(){
-		timer = new Timer(200, new ActionListener() {
+		timer = new Timer(100, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (board.gameWon() != 0) {
 					JOptionPane.showMessageDialog(submitMovePanel,

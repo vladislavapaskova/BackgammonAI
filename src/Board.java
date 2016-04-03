@@ -37,6 +37,8 @@ public class Board {
 
 	// create a variable for the dice roll
 	int diceRoll;
+	
+	int itterations = 0;
 
 	/*
 	 * board constructor
@@ -169,7 +171,13 @@ public class Board {
 			if ((finalSix + winPiece) != 15) {
 				if (numPlayer == 1) {
 					while (!checkIfPieceCanMove(numPlayer, (playingPos + diceRoll))) {
+						if(itterations<15){
+						itterations++;
 						playingPos = availablePos.get(0 + (int) (Math.random() * availablePos.size()));
+						}else{
+							itterations = 0;
+							return -1;
+						}
 					}
 					// take the piece from where it was
 					boardA[playingPos].pop();
@@ -188,7 +196,13 @@ public class Board {
 					}
 				} else if (numPlayer == 2) {
 					while (!checkIfPieceCanMove(numPlayer, (playingPos - diceRoll))) {
-						playingPos = availablePos.get(0 + (int) (Math.random() * availablePos.size()));
+						if(itterations<15){
+							itterations++;
+							playingPos = availablePos.get(0 + (int) (Math.random() * availablePos.size()));
+							}else{
+								itterations = 0;
+								return -1;
+							}
 					}
 					boardA[playingPos].pop();
 					if (!boardA[playingPos - diceRoll].isEmpty() && numPlayer == 2
@@ -211,7 +225,13 @@ public class Board {
 				// of the board
 				if (numPlayer == 1) {
 					while (!checkIfPieceCanMove(numPlayer, (playingPos + diceRoll)) && playingPos + diceRoll < 23) {
-						playingPos = availablePos.get(0 + (int) (Math.random() * availablePos.size()));
+						if(itterations<15){
+							itterations++;
+							playingPos = availablePos.get(0 + (int) (Math.random() * availablePos.size()));
+							}else{
+								itterations = 0;
+								return -1;
+							}
 					}
 					boardA[playingPos].pop();
 
@@ -230,7 +250,13 @@ public class Board {
 				}
 				if (numPlayer == 2) {
 					while (!checkIfPieceCanMove(numPlayer, (playingPos - diceRoll)) && playingPos - diceRoll >= 0) {
-						playingPos = availablePos.get(0 + (int) (Math.random() * availablePos.size()));
+						if(itterations<15){
+							itterations++;
+							playingPos = availablePos.get(0 + (int) (Math.random() * availablePos.size()));
+							}else{
+								itterations = 0;
+								return -1;
+							}
 					}
 					boardA[playingPos].pop();
 
@@ -312,8 +338,6 @@ public class Board {
 						return "The piece chosen can not move. Please choose another piece!";
 					}
 					// take the piece from where it was
-					System.out.println("hereeeeee");
-					System.out.println(playingPos);
 					boardA[playingPos].pop();
 					// check if the piece is on top of the other player's piece
 					if (!boardA[playingPos + diceRoll].isEmpty() && boardA[playingPos + diceRoll].peek() == 2) {
@@ -476,8 +500,6 @@ public class Board {
 	public boolean checkIfPieceCanMove(int numPlayer, int col) {
 		// check if it goes outside of the board
 		if (col < boardA.length && col >= 0) {
-			System.out.println("HEREEE555");
-			System.out.println(col);
 			if (boardA[col].isEmpty() || boardA[col].peek() == numPlayer)
 				return true;
 			else {
