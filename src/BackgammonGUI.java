@@ -58,6 +58,7 @@ public class BackgammonGUI extends JPanel {
 	/*
 	 * USED FOR TESTING PURPOSES ONLY
 	 */
+//dsd
 	// public void initializeStacks() {
 	// for (int i = 0; i < board.length; i++) {
 	// Stack<Piece> stack = new Stack();
