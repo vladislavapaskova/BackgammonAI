@@ -165,7 +165,7 @@ public class RandomAgent extends Agent {
 				}
 			}
 		}
-		return Board.diceRoll;
+		return diceRoll;
 	}
 
 	@Override
