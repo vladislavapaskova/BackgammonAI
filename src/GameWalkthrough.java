@@ -27,7 +27,6 @@ public class GameWalkthrough extends JPanel {
 	private BufferedImage diceImg;
 	private JLabel dice;
 	private int currentPlayer = 1;
-	private Board board = new Board();
 	private Image player1;
 	private Image player2;
 	private Image finishedRedImg;
@@ -37,37 +36,45 @@ public class GameWalkthrough extends JPanel {
 	private JLabel offBoardPiecesP1;
 	private JLabel offBoardPiecesP2;
 	private Timer timer;
+	private Agent agent1;
+	private Agent agent2;
+	private Board board = new Board();
 
-	public GameWalkthrough() {
+	public GameWalkthrough(Agent agent1, Agent agent2) {
 		super(new BorderLayout(0, 0));
 		setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, new Color(191, 159, 82)));
 		add(offBoardPieces(), BorderLayout.EAST);
 		setBackground(new Color(7, 19, 48));
+		this.agent1 = agent1;
+		this.agent2 = agent2;
 		startGame();
 	}
 
-	public void startGame(){
+	public void startGame() {
 		timer = new Timer(100, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (board.gameWon() != 0) {
+				if (Board.gameWon() != 0) {
 					JOptionPane.showMessageDialog(submitMovePanel,
-							"Congratulations player " + board.gameWon() + "! You won!");
+							"Congratulations player " + Board.gameWon() + "! You won!");
 					timer.stop();
-				}else{
-				rollDiceandMove(currentPlayer);
-				getNextPlayer();
+				} else {
+					rollDiceandMove(currentPlayer);
+					getNextPlayer();
 				}
 			}
 		});
 		timer.start();
 	}
 
-	public void rollDiceandMove(int currentPlayer){
-		
-		updateDiceRollPanel(board.movePiece(currentPlayer));
-		if (board.winPlayer1 > 0 || board.winPlayer2 > 0) {
-			getRedFinalPieces(board.winPlayer1);
-			getWhiteFinalPieces(board.winPlayer2);
+	public void rollDiceandMove(int currentPlayer) {
+		if (currentPlayer == 1) {
+			updateDiceRollPanel(agent1.movePiece(currentPlayer));
+		} else {
+			updateDiceRollPanel(agent2.movePiece(currentPlayer));
+		}
+		if (Board.winPlayer1 > 0 || Board.winPlayer2 > 0) {
+			getRedFinalPieces(Board.winPlayer1);
+			getWhiteFinalPieces(Board.winPlayer2);
 			try {
 				finishedRedImg = ImageIO.read(finishedRed);
 			} catch (IOException e) {
@@ -82,13 +89,12 @@ public class GameWalkthrough extends JPanel {
 			offBoardPiecesP2.setIcon(new ImageIcon(finishedWhiteImg));
 		}
 		repaint();
-	
+
 	}
+
 	/*
-	 * JPanel that contains everything involving the dice rolling and choosing
-	 * of a piece to move/ move Ability to roll dice from 1-6 Ability to choose
-	 * a piece to Move Ability to choose a location to move it to TODO- Break up
-	 * method. It is a bit to long..
+	 * JPanel that contains everything containing the dice and current pieces
+	 * that are off the board
 	 */
 	public JPanel diceRollPanel() {
 		JPanel diceRollPanel = new JPanel(new BorderLayout(50, 50));
@@ -105,18 +111,12 @@ public class GameWalkthrough extends JPanel {
 			diceRollPanel.add(dice, BorderLayout.NORTH);
 		}
 		piecesOut = new JLabel("", SwingConstants.CENTER);
-		System.out.println(board.outPlayer1);
-		piecesOut.setText("Pieces Out:   " + "Player 1: " + board.outPlayer1 + "  " + "Player 2: " + board.outPlayer2);
+		piecesOut.setText("Pieces Out:   " + "Player 1: " + Board.outPlayer1 + "  " + "Player 2: " + Board.outPlayer2);
 		piecesOut.setForeground(Color.white);
 		piecesOut.setBackground(new Color(11, 79, 45));
 		piecesOut.setBorder(BorderFactory.createMatteBorder(15, 15, 15, 15, new Color(11, 79, 45)));
 		diceRollPanel.add(piecesOut, BorderLayout.SOUTH);
-
 		return diceRollPanel;
-	}
-
-	public void refreshoffBoardImages() {
-
 	}
 
 	/*
@@ -319,9 +319,9 @@ public class GameWalkthrough extends JPanel {
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		int count1p = 1;
 		int count2p = 1;
-		super.paintComponent(g);
 		try {
 			player1 = ImageIO.read(new File("images/bgP1.png"));
 		} catch (IOException e) {
@@ -334,7 +334,7 @@ public class GameWalkthrough extends JPanel {
 		}
 
 		for (int i = 11; i >= 0; i--) {
-			Stack<Integer> stack = board.boardA[i];
+			Stack<Integer> stack = Board.boardA[i];
 			Stack<Integer> copy = new Stack<Integer>();
 
 			while (!stack.empty()) {
@@ -353,7 +353,6 @@ public class GameWalkthrough extends JPanel {
 				stack.push(p);
 			}
 
-			
 			g.setColor(Color.white);
 			g.drawString(i + "", count2p * 55, 690);
 
@@ -364,7 +363,7 @@ public class GameWalkthrough extends JPanel {
 
 		}
 		for (int i = 12; i < 24; i++) {
-			Stack<Integer> stack = board.boardA[i];
+			Stack<Integer> stack = Board.boardA[i];
 			Stack<Integer> copy = new Stack<Integer>();
 			while (!stack.empty()) {
 				copy.push(stack.pop());
@@ -391,10 +390,13 @@ public class GameWalkthrough extends JPanel {
 				count1p++;
 
 		}
-		piecesOut.setText("Pieces Out:   " + "Player 1: " + board.outPlayer1 + "  " + "Player 2: " + board.outPlayer2);
+		piecesOut.setText("Pieces Out:   " + "Player 1: " + Board.outPlayer1 + "  " + "Player 2: " + Board.outPlayer2);
 
 	}
 
+	/*
+	 * Gets the next player given the current player
+	 */
 	public int getNextPlayer() {
 		if (currentPlayer == 1) {
 			currentPlayer = 2;
@@ -409,7 +411,7 @@ public class GameWalkthrough extends JPanel {
 		JFrame gameFrame = new JFrame();
 		gameFrame.setResizable(false);
 		gameFrame.setSize(1100, 740);
-		gameFrame.add(new GameWalkthrough());
+		gameFrame.add(new GameWalkthrough(new RandomAgent(), new RandomAgent()));
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}

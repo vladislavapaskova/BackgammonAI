@@ -46,45 +46,23 @@ public class BackgammonGUI extends JPanel {
 	private JLabel piecesOut;
 	private JLabel offBoardPiecesP1;
 	private JLabel offBoardPiecesP2;
+	private Agent agent1;
+	private Agent agent2;
 
-	public BackgammonGUI() {
+	public BackgammonGUI(Agent agent1, Agent agent2) {
 		super(new BorderLayout(0, 0));
 		setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, new Color(191, 159, 82)));
 		add(offBoardPieces(), BorderLayout.EAST);
 		setBackground(new Color(7, 19, 48));
+		this.agent1 = agent1;
+		this.agent2 = agent2;
 
-	}
-
-	/*
-	 * USED FOR TESTING PURPOSES ONLY
-	 */
-	// public void initializeStacks() {
-	// for (int i = 0; i < board.length; i++) {
-	// Stack<Piece> stack = new Stack();
-	// board[i] = stack;
-	// int randomNum = 0 + (int) (Math.random() * 6);
-	// for (int j = 0; j < randomNum; j++) {
-	// stack.push(new Piece(((j % 2 == 0) ? "red" : "white")));
-	// }
-	//
-	// }
-	// }
-
-	/*
-	 * USED FOR TESTING PURPOSES ONLY
-	 */
-	public void checkIfStacksFilled() {
-		for (int i = 0; i < board.boardA.length; i++) {
-			Stack<Integer> stack = board.boardA[i];
-			System.out.print(stack.size() + " , ");
-		}
 	}
 
 	/*
 	 * JPanel that contains everything involving the dice rolling and choosing
 	 * of a piece to move/ move Ability to roll dice from 1-6 Ability to choose
-	 * a piece to Move Ability to choose a location to move it to TODO- Break up
-	 * method. It is a bit to long..
+	 * a piece to Move Ability to choose a location to move it to.
 	 */
 	public JPanel diceRollPanel() {
 		JPanel diceRollPanel = new JPanel(new BorderLayout(50, 50));
@@ -121,20 +99,19 @@ public class BackgammonGUI extends JPanel {
 				System.out.println(currentPlayer);
 				if (currentPlayer == 1) {
 					numToMove = Integer.parseInt(pieceToMove.getText());
-
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if (!board.canMove(1, numToMove)) {
-						JOptionPane.showMessageDialog(submitMovePanel, "There is no piece there to move! Please choose another piece!");
+					if (!agent1.canMove(1, numToMove)) {
+						JOptionPane.showMessageDialog(submitMovePanel,
+								"There is no piece there to move! Please choose another piece!");
 						pieceToMove.setText("Piece you wish to move");
 						return;
 					} else {
-						
-						String result = board.movePiece(currentPlayer, numToMove, diceRoll);
+						String result = agent1.movePiece(currentPlayer, numToMove, diceRoll);
 						if (board.gameWon() != 0) {
 							JOptionPane.showMessageDialog(submitMovePanel,
 									"Congratulations player " + board.gameWon() + "! You won!");
@@ -162,18 +139,18 @@ public class BackgammonGUI extends JPanel {
 								offBoardPiecesP1.setIcon(new ImageIcon(finishedRedImg));
 								offBoardPiecesP2.setIcon(new ImageIcon(finishedWhiteImg));
 							}
-							
+
 						} else {
 							JOptionPane.showMessageDialog(submitMovePanel, result);
 							pieceToMove.setText("Piece you wish to move");
 							return;
 
-					}
+						}
 						submitPanel.setVisible(false);
 						rollDice.setVisible(true);
 						diceRollPanel.add(rollDice);
 						pieceToMove.setText("Piece you wish to move");
-  						board.movePiece(2);
+						agent2.movePiece(2);
 					}
 					repaint();
 				}
@@ -185,7 +162,6 @@ public class BackgammonGUI extends JPanel {
 		submitPanel.add(submit, BorderLayout.EAST);
 		submitPanel.add(pieceToMove, BorderLayout.WEST);
 		piecesOut = new JLabel("", SwingConstants.CENTER);
-		System.out.println(board.outPlayer1);
 		piecesOut.setText("Pieces Out:   " + "Player 1: " + board.outPlayer1 + "  " + "Player 2: " + board.outPlayer2);
 		piecesOut.setForeground(Color.white);
 		piecesOut.setBackground(new Color(11, 79, 45));
@@ -211,7 +187,7 @@ public class BackgammonGUI extends JPanel {
 					submitPanel.setVisible(false);
 					rollDice.setVisible(true);
 					diceRollPanel.add(rollDice);
-					board.movePiece(1, -1, diceRoll);
+					agent1.movePiece(1, -1, diceRoll);
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
@@ -219,7 +195,7 @@ public class BackgammonGUI extends JPanel {
 						e.printStackTrace();
 					}
 					repaint();
-					board.movePiece(2);
+					agent2.movePiece(2);
 				}
 				repaint();
 			}
@@ -293,7 +269,6 @@ public class BackgammonGUI extends JPanel {
 		}
 		rollDice.setIcon(new ImageIcon(roll));
 		revalidate();
-
 	}
 
 	/*
@@ -461,7 +436,6 @@ public class BackgammonGUI extends JPanel {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		for (int i = 11; i >= 0; i--) {
 			Stack<Integer> stack = board.boardA[i];
 			Stack<Integer> copy = new Stack<Integer>();
@@ -481,7 +455,6 @@ public class BackgammonGUI extends JPanel {
 				y -= 60;
 				stack.push(p);
 			}
-
 			if ((i == numToMove || i == movedPosition) && (moving1 == true || moving2 == true)) {
 				if (i == numToMove) {
 					g.setColor(Color.yellow);
@@ -502,12 +475,10 @@ public class BackgammonGUI extends JPanel {
 			}
 			g.setColor(Color.white);
 			g.drawString(i + "", count2p * 55, 690);
-
 			if (count2p == 6)
 				count2p += 2;
 			else
 				count2p++;
-
 		}
 		for (int i = 12; i < 24; i++) {
 			Stack<Integer> stack = board.boardA[i];
@@ -531,11 +502,10 @@ public class BackgammonGUI extends JPanel {
 			if ((i == numToMove || i == movedPosition) && (moving1 == true || moving2 == true)) {
 				if (i == numToMove) {
 					g.setColor(Color.yellow);
-					if(stack.size() == 1){
+					if (stack.size() == 1) {
 						g.drawRect(count1p * 55 - 3, 60 * (stack.size()) - 33, 55, 55);
-					}
-					else{
-					g.drawRect(count1p * 55 - 3, 60 * (stack.size() + 1) - 33, 55, 55);
+					} else {
+						g.drawRect(count1p * 55 - 3, 60 * (stack.size() + 1) - 33, 55, 55);
 					}
 					moving1 = false;
 				}
@@ -558,12 +528,13 @@ public class BackgammonGUI extends JPanel {
 				count1p += 2;
 			else
 				count1p++;
-
 		}
 		piecesOut.setText("Pieces Out:   " + "Player 1: " + board.outPlayer1 + "  " + "Player 2: " + board.outPlayer2);
-
 	}
 
+	/*
+	 * Gets the next player, given the current player
+	 */
 	public int getNextPlayer() {
 		if (currentPlayer == 1) {
 			currentPlayer = 2;
@@ -578,7 +549,7 @@ public class BackgammonGUI extends JPanel {
 		JFrame gameFrame = new JFrame();
 		gameFrame.setResizable(false);
 		gameFrame.setSize(1100, 740);
-		gameFrame.add(new BackgammonGUI());
+		gameFrame.add(new BackgammonGUI(new HumanAgent(), new RandomAgent()));
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}
