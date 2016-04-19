@@ -13,6 +13,7 @@ import javax.swing.Timer;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -39,6 +40,7 @@ public class GameWalkthrough extends JPanel {
 	private Agent agent1;
 	private Agent agent2;
 	private Board board = new Board();
+	int count = 0;
 
 	public GameWalkthrough(Agent agent1, Agent agent2) {
 		super(new BorderLayout(0, 0));
@@ -53,6 +55,7 @@ public class GameWalkthrough extends JPanel {
 	public void startGame() {
 		timer = new Timer(100, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(count>5){
 				if (Board.gameWon() != 0) {
 					JOptionPane.showMessageDialog(submitMovePanel,
 							"Congratulations player " + Board.gameWon() + "! You won!");
@@ -61,6 +64,10 @@ public class GameWalkthrough extends JPanel {
 					rollDiceandMove(currentPlayer);
 					getNextPlayer();
 				}
+			
+			}else{
+				count++;
+			}
 			}
 		});
 		timer.start();
@@ -110,12 +117,31 @@ public class GameWalkthrough extends JPanel {
 			dice = new JLabel(new ImageIcon(diceImg));
 			diceRollPanel.add(dice, BorderLayout.NORTH);
 		}
+		JPanel background = new JPanel(new BorderLayout());
+		background.setBackground(new Color(11, 79, 45));
+		background.setBorder(BorderFactory.createMatteBorder(0, 40, 5, 40, new Color(11, 79, 45)));
+		JButton pause = new JButton("Pause");
+		pause.setForeground(Color.gray);
+		pause.setPreferredSize(new Dimension(20, 40));
+		pause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				if(timer.isRunning()){
+			       timer.stop();
+			       pause.setText("Resume");
+				}else{
+					timer.start();
+					pause.setText("Pause");
+				}
+
+			}});
+		background.add(pause, BorderLayout.CENTER);
 		piecesOut = new JLabel("", SwingConstants.CENTER);
 		piecesOut.setText("Pieces Out:   " + "Player 1: " + Board.outPlayer1 + "  " + "Player 2: " + Board.outPlayer2);
 		piecesOut.setForeground(Color.white);
 		piecesOut.setBackground(new Color(11, 79, 45));
 		piecesOut.setBorder(BorderFactory.createMatteBorder(15, 15, 15, 15, new Color(11, 79, 45)));
-		diceRollPanel.add(piecesOut, BorderLayout.SOUTH);
+		diceRollPanel.add(piecesOut, BorderLayout.CENTER);
+		diceRollPanel.add(background, BorderLayout.SOUTH);
 		return diceRollPanel;
 	}
 
@@ -411,7 +437,7 @@ public class GameWalkthrough extends JPanel {
 		JFrame gameFrame = new JFrame();
 		gameFrame.setResizable(false);
 		gameFrame.setSize(1100, 740);
-		gameFrame.add(new GameWalkthrough(new RandomAgent(), new RandomAgent()));
+		gameFrame.add(new GameWalkthrough(new ReinforcementLearningAgent(1), new RandomAgent()));
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}

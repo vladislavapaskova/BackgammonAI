@@ -3,9 +3,9 @@ import java.util.Arrays;
 import java.util.Stack;
 
 public class Board {
-
 	// game board
 	static Stack<Integer>[] boardA;
+	
 
 	// board size
 	static final int BOARDSIZE = 24;
@@ -32,13 +32,12 @@ public class Board {
 	public Board() {
 		initializeGame();
 		itterations = 0;
-		printBoard();
 	}
 
 	/*
 	 * Initializes game
 	 */
-	private void initializeGame() {
+	private static void initializeGame() {
 		outPlayer1 = 0;
 		outPlayer2 = 0;
 		winPlayer1 = 0;
@@ -77,7 +76,7 @@ public class Board {
 	 * This method initializes the initial board i.e. puts all of the pieces in
 	 * the correct locations initializes all of the stacks
 	 */
-	private void initializeBoardArray() {
+	private static void initializeBoardArray() {
 		boardA = new Stack[BOARDSIZE];
 
 		for (int i = 0; i < BOARDSIZE; i++) {
@@ -108,7 +107,7 @@ public class Board {
 	/*
 	 * Puts correct number of pieces in a given stack
 	 */
-	private Stack<Integer> putInitPieces(Stack<Integer> s, int numPieces, int numPlayer) {
+	private static Stack<Integer> putInitPieces(Stack<Integer> s, int numPieces, int numPlayer) {
 		for (int i = 0; i < numPieces; i++) {
 			s.push(numPlayer);
 		}
@@ -118,22 +117,23 @@ public class Board {
 	/*
 	 * Prints the current state of the board
 	 */
-	public String printBoard() {
+	public static String printBoard(Stack[] board) {
 		String print = "";
 		for (int i = 0; i < BOARDSIZE; i++) {
-			print += Arrays.toString(boardA[i].toArray());
+			print += Arrays.toString(board[i].toArray());
 		}
-		System.out.println(print);
 		return print;
 	}
-	
-
 
 	/*
 	 * generates a random number from 1-6 for the die roll
 	 */
 	public static int dieRoll() {
 		return (1 + (int) (Math.random() * 6));
+	}
+	
+	public static void reset(){
+		initializeGame();
 	}
 
 	/*
@@ -177,7 +177,6 @@ public class Board {
 		} else
 			return false;
 	}
-
 
 	public static void main(String[] args) {
 
