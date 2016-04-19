@@ -6,12 +6,12 @@ import java.util.ArrayList;
  */
 public class MaxNode extends Node{
 	MaxNode parent;
-	Board board;
+	BoardState board;
 	public boolean isChanceNode; 
 	public boolean isMaxNode; 
 	public boolean isMinNode; 
 	
-	public MaxNode(Board board){
+	public MaxNode(BoardState board){
 		this.parent=null; 
 		this.board=board;
 		this.isChanceNode=false; 
@@ -19,7 +19,7 @@ public class MaxNode extends Node{
 		this.isMinNode=false; 
 	}
 	
-	public MaxNode(MaxNode parent, Board board){
+	public MaxNode(MaxNode parent, BoardState board){
 		this.parent=parent; 
 		this.board=board; 
 		this.isChanceNode=false; 

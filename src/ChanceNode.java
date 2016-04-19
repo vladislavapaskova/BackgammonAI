@@ -8,6 +8,7 @@ public class ChanceNode extends Node{
 	public boolean isChanceNode; 
 	public boolean isMaxNode; 
 	public boolean isMinNode; 
+	BoardState board;
 	
 	public ChanceNode(MaxNode maxNode, int dieRoll) {
 		this.minNode=null;
@@ -15,7 +16,8 @@ public class ChanceNode extends Node{
 		this.dieRoll=dieRoll;
 		this.isChanceNode=true; 
 		this.isMaxNode=false; 
-		this.isMinNode=false; 
+		this.isMinNode=false;
+		this.board=maxNode.board;
 	}
 	
 	public ChanceNode(MinNode minNode, int dieRoll) {
@@ -24,21 +26,20 @@ public class ChanceNode extends Node{
 		this.dieRoll=dieRoll;
 		this.isChanceNode=true; 
 		this.isMaxNode=false; 
-		this.isMinNode=false; 
+		this.isMinNode=false;
+		this.board=minNode.board;
 	}
 
 	public List<Node> expand(){
 		int numPlayer;
-		Board board; 
+		BoardState temp; 
 		
 		//means that it is number 1's turn
 		if(minNode==null){
 			numPlayer=1;
-			board=maxNode.board;
 		}
 		else{
 			numPlayer=2;
-			board=minNode.board;
 		}
 		
 		ArrayList<Integer> list = board.checkMovingPositions(numPlayer);
@@ -49,15 +50,15 @@ public class ChanceNode extends Node{
 				if(board.checkIfPieceCanMove(numPlayer, move+dieRoll))
 				{
 					Node node; 
-					//here the board needs to be copied
-					board.boardA[move].pop();
-					board.boardA[move+dieRoll].push(numPlayer);
+					
+					temp=board.copyBoardState(board);
+					temp.movePiece(numPlayer, move, dieRoll);
 					
 					if(minNode==null){
-						node= new MinNode(board); 
+						node= new MinNode(temp); 
 					}
 					else{
-						node= new MaxNode(board);
+						node= new MaxNode(temp);
 					}
 
 					listOfPossibleBoards.add(node);

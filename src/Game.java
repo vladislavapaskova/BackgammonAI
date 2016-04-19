@@ -2,7 +2,7 @@
 public class Game {
 
 	RandomAgent agent2;
-    ReinforcementLearningAgent agent1;
+    ExpectiminimaxAgent agent1;
 	//ReinforcementLearningAgent agent2;
 	//RandomAgent agent1;
 
@@ -10,7 +10,7 @@ public class Game {
 	public Game() {
 		// learner = new ReinforcementLearner();
 		Board.reset();
-		agent1 = new ReinforcementLearningAgent(1);
+		agent1 = new ExpectiminimaxAgent();
 		//agent1 = new RandomAgent();
 		agent2 = new RandomAgent();
 		System.out.println(Board.printBoard(Board.boardA));
