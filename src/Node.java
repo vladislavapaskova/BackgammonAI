@@ -10,6 +10,7 @@ public abstract class Node {
 	
 	public List<Node> expand() {
 		// TODO Auto-generated method stub
+		System.out.println("hereeee");
 		return null;
 	}
 	

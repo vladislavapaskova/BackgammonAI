@@ -75,7 +75,7 @@ public class BoardState {
 						return "The piece chosen can not move. Please choose another piece!";
 					}
 					// take the piece from where it was
-					System.out.println(playingPos);
+					//System.out.println(playingPos);
 					gameBoard[playingPos].pop();
 					// check if the piece is on top of the other player's piece
 					if (!gameBoard[playingPos + diceRoll].isEmpty() && gameBoard[playingPos + diceRoll].peek() == 2) {

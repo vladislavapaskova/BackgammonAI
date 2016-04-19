@@ -17,17 +17,18 @@ public class ExpectiminimaxAgent extends Agent {
 		int numPlayer=1;
 		ArrayList<Integer> list = board.checkMovingPositions(numPlayer);
 		
-		MaxNode tempNode;
+		Node tempNode;
 		BoardState tempBoard; 
 		int tempMove; 
 		int finalMove=0; 
-		MaxNode bestNode=null; 
+		Node bestNode=null; 
 		
 		double maxVal = Double.NEGATIVE_INFINITY;
 		double tempVal; 
 		
 		for(int i=0; i<list.size();i++)
 		{
+			
 			int move = list.get(i);
 				if(board.checkIfPieceCanMove(numPlayer, move+dieRoll))
 				{
@@ -37,6 +38,7 @@ public class ExpectiminimaxAgent extends Agent {
 			
 					tempNode=new MaxNode(tempBoard); 
 					tempVal = minimaxValue(tempNode,1);
+
 					
 					if(tempVal > maxVal)
 					{
@@ -46,7 +48,7 @@ public class ExpectiminimaxAgent extends Agent {
 					}
 				}
 		}
-		
+		System.out.println("final move"+finalMove);
 		return finalMove; 
 	}
 	
@@ -54,6 +56,7 @@ public class ExpectiminimaxAgent extends Agent {
 	 * computing minimax value
 	 */
 	public double minimaxValue(Node n, int depth){
+		//System.out.println(n.board.outPlayer1);
 		if(depth == MAX_DEPTH)
 		{
 			return heuristic1(n.board, 1);
@@ -66,7 +69,7 @@ public class ExpectiminimaxAgent extends Agent {
 			list = n.expand(); 
 			
 			for(int i=0; i<list.size(); i++){
-				v+=minimaxValue(list.get(i), depth)/list.size(); 
+				v+=minimaxValue(list.get(i), depth+1)/list.size(); 
 			}
 			
 			return v;
@@ -104,14 +107,16 @@ public class ExpectiminimaxAgent extends Agent {
 	 */
 	public double heuristic1(BoardState board, int numPlayer)
 	{
-		double heuristic=0; 
+		double heuristic=0.0; 
 		if(numPlayer==1)
 		{
-			heuristic=board.outPlayer2*10; 
+			heuristic+=board.finalPlayer1*50; 
+			heuristic+=board.outPlayer2*10; 
 		}
 		else
 		{
-			heuristic=board.outPlayer1*10; 
+			heuristic+=board.finalPlayer2*50;
+			heuristic+=board.outPlayer1*10; 
 		}
 		return heuristic; 
 	}

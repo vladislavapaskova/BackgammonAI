@@ -6,10 +6,6 @@ import java.util.ArrayList;
  */
 public class MaxNode extends Node{
 	MaxNode parent;
-	BoardState board;
-	public boolean isChanceNode; 
-	public boolean isMaxNode; 
-	public boolean isMinNode; 
 	
 	public MaxNode(BoardState board){
 		this.parent=null; 

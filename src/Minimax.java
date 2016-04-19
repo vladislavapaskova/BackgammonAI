@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Minimax {
-	
+	/*
 	ExpectiminimaxAgent agent;  
 	int MAX_DEPTH=4; 
 
@@ -41,9 +41,7 @@ public class Minimax {
 		return bestNode.board; 
 	}
 	
-	/*
-	 * computing minimax value
-	 */
+
 	public double minimaxValue(Node n, int depth){
 		if(depth == MAX_DEPTH)
 		{
@@ -90,9 +88,7 @@ public class Minimax {
 	}
 	
 	
-	/*
-	 * This strategy tries to take out players pieces
-	 */
+
 	public double heuristic1(Board b, int numPlayer)
 	{
 		double heuristic=0; 
@@ -106,5 +102,6 @@ public class Minimax {
 		}
 		return heuristic; 
 	}
+	*/
 	
 }

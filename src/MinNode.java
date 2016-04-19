@@ -3,10 +3,6 @@ import java.util.List;
 
 public class MinNode extends Node{
 	MinNode parent;
-	BoardState board;
-	public boolean isChanceNode; 
-	public boolean isMaxNode; 
-	public boolean isMinNode; 
 	
 	public MinNode(BoardState board){
 		this.parent=null; 

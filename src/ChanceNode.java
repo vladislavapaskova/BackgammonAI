@@ -5,10 +5,6 @@ public class ChanceNode extends Node{
 	MinNode minNode; 
 	MaxNode maxNode;  
 	int dieRoll; 
-	public boolean isChanceNode; 
-	public boolean isMaxNode; 
-	public boolean isMinNode; 
-	BoardState board;
 	
 	public ChanceNode(MaxNode maxNode, int dieRoll) {
 		this.minNode=null;
