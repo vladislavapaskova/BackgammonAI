@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
@@ -117,13 +118,16 @@ public class Board {
 	/*
 	 * Prints the current state of the board
 	 */
-	public static void printBoard() {
+	public String printBoard() {
 		String print = "";
 		for (int i = 0; i < BOARDSIZE; i++) {
 			print += Arrays.toString(boardA[i].toArray());
 		}
 		System.out.println(print);
+		return print;
 	}
+	
+
 
 	/*
 	 * generates a random number from 1-6 for the die roll
@@ -132,7 +136,47 @@ public class Board {
 		return (1 + (int) (Math.random() * 6));
 	}
 
+	/*
+	 * Returns a list of the possible pieces that can be moved
+	 */
+	public ArrayList<Integer> checkMovingPositions(int numPlayer) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < Board.BOARDSIZE; i++) {
+			if (canMove(numPlayer, i)) {
+				list.add(i);
+			}
+		}
+		return list;
 
+	}
+
+	/*
+	 * Checks if a piece can move from this position
+	 */
+	public boolean canMove(int numPlayer, int col) {
+		if (Board.boardA[col].isEmpty() || Board.boardA[col].peek() != numPlayer) {
+			return false;
+		}
+		return true;
+	}
+
+	/*
+	 * Checks if the piece can move to the specified position
+	 */
+	public boolean checkIfPieceCanMove(int numPlayer, int col) {
+		if (col < Board.boardA.length && col >= 0) {
+			if (Board.boardA[col].isEmpty() || Board.boardA[col].peek() == numPlayer)
+				return true;
+			else {
+				if (Board.boardA[col].size() == 1) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else
+			return false;
+	}
 
 
 	public static void main(String[] args) {
