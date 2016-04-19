@@ -3,7 +3,7 @@ import java.util.List;
 
 public class ExpectiminimaxAgent extends Agent {
 
-	int MAX_DEPTH=4;
+	int MAX_DEPTH=6;
 
 	
 	@Override
@@ -48,7 +48,7 @@ public class ExpectiminimaxAgent extends Agent {
 					}
 				}
 		}
-		System.out.println("final move"+finalMove);
+		//System.out.println("final move"+finalMove);
 		return finalMove; 
 	}
 	
