@@ -46,7 +46,7 @@ public class ChanceNode extends Node{
 				if(board.checkIfPieceCanMove(numPlayer, move+dieRoll))
 				{
 					Node node; 
-					
+					System.out.println(move);
 					temp=board.copyBoardState(board);
 					temp.movePiece(numPlayer, move, dieRoll);
 					

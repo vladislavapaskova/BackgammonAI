@@ -437,7 +437,7 @@ public class GameWalkthrough extends JPanel {
 		JFrame gameFrame = new JFrame();
 		gameFrame.setResizable(false);
 		gameFrame.setSize(1100, 740);
-		gameFrame.add(new GameWalkthrough(new ReinforcementLearningAgent(1), new RandomAgent()));
+		gameFrame.add(new GameWalkthrough(new ExpectiminimaxAgent(), new RandomAgent()));
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}
