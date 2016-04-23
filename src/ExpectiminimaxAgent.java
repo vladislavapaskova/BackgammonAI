@@ -219,7 +219,7 @@ public class ExpectiminimaxAgent extends Agent {
 		//System.out.println(n.board.outPlayer1);
 		if(depth == MAX_DEPTH)
 		{
-			return heuristic2(n.board, 1);
+			return heuristic3(n.board, 1);
 		}
 
 		if(n.isChanceNode==true) // chance node
@@ -294,6 +294,25 @@ public class ExpectiminimaxAgent extends Agent {
 		else
 		{
 			heuristic+=board.finalPlayer2*5; 
+		}
+		return heuristic; 
+	}
+	
+	/*
+	 * This strategy tries to take out more of the other player's pieces and also get pieces in the final six
+	 */
+	public double heuristic3(BoardState board, int numPlayer)
+	{
+		double heuristic=0.0; 
+		if(numPlayer==1)
+		{
+			heuristic+=board.finalPlayer1*10; 
+			heuristic+=board.outPlayer2*50; 
+		}
+		else
+		{
+			heuristic+=board.finalPlayer2*10;
+			heuristic+=board.outPlayer1*50; 
 		}
 		return heuristic; 
 	}
