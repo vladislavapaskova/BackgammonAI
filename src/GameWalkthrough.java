@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -55,19 +56,19 @@ public class GameWalkthrough extends JPanel {
 	public void startGame() {
 		timer = new Timer(100, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(count>5){
-				if (Board.gameWon() != 0) {
-					JOptionPane.showMessageDialog(submitMovePanel,
-							"Congratulations player " + Board.gameWon() + "! You won!");
-					timer.stop();
+				if (count > 5) {
+					if (Board.gameWon() != 0) {
+						JOptionPane.showMessageDialog(submitMovePanel,
+								"Congratulations player " + Board.gameWon() + "! You won!");
+						timer.stop();
+					} else {
+						rollDiceandMove(currentPlayer);
+						getNextPlayer();
+					}
+
 				} else {
-					rollDiceandMove(currentPlayer);
-					getNextPlayer();
+					count++;
 				}
-			
-			}else{
-				count++;
-			}
 			}
 		});
 		timer.start();
@@ -125,15 +126,16 @@ public class GameWalkthrough extends JPanel {
 		pause.setPreferredSize(new Dimension(20, 40));
 		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				if(timer.isRunning()){
-			       timer.stop();
-			       pause.setText("Resume");
-				}else{
+				if (timer.isRunning()) {
+					timer.stop();
+					pause.setText("Resume");
+				} else {
 					timer.start();
 					pause.setText("Pause");
 				}
 
-			}});
+			}
+		});
 		background.add(pause, BorderLayout.CENTER);
 		piecesOut = new JLabel("", SwingConstants.CENTER);
 		piecesOut.setText("Pieces Out:   " + "Player 1: " + Board.outPlayer1 + "  " + "Player 2: " + Board.outPlayer2);
@@ -367,6 +369,7 @@ public class GameWalkthrough extends JPanel {
 				copy.push(stack.pop());
 			}
 			int y = 625;
+			int count = 0;
 			while (!copy.isEmpty()) {
 				Integer p = copy.pop();
 				Image color;
@@ -374,11 +377,20 @@ public class GameWalkthrough extends JPanel {
 					color = player1;
 				else
 					color = player2;
-				g.drawImage(color, count2p * 55, y, null);
-				y -= 60;
+				if (count < 5) {
+					g.drawImage(color, count2p * 55, y, null);
+					y -= 60;
+				} else {
+					g.setFont(new Font("default", Font.BOLD, 20));
+					g.setColor(Color.BLACK);
+					int s = count - 4;
+					g.drawImage(color, count2p * 55, y+60, null);
+					g.drawString(s + "", count2p * 55 + 18, y + 90);
+				}
+				count++;
 				stack.push(p);
 			}
-
+			g.setFont(new Font("default", Font.PLAIN, 14));
 			g.setColor(Color.white);
 			g.drawString(i + "", count2p * 55, 690);
 
@@ -395,6 +407,7 @@ public class GameWalkthrough extends JPanel {
 				copy.push(stack.pop());
 			}
 			int y = 30;
+			int count = 0;
 			while (!copy.isEmpty()) {
 				Integer p = copy.pop();
 				Image color;
@@ -402,11 +415,21 @@ public class GameWalkthrough extends JPanel {
 					color = player1;
 				else
 					color = player2;
-				g.drawImage(color, count1p * 55, y, null);
-				y += 60;
+				if (count < 5) {
+					g.drawImage(color, count1p * 55, y, null);
+					y += 60;
+				} else {
+					g.setFont(new Font("default", Font.BOLD, 20));
+					g.setColor(Color.BLACK);
+					int s = count - 4;
+					g.drawImage(color, count1p * 55, y-60, null);
+					g.drawString(s + "", (count1p * 55) + 18 , y - 30);
+				}
+				count++;
 				stack.push(p);
 			}
 
+			g.setFont(new Font("default", Font.PLAIN, 14));
 			g.setColor(Color.white);
 			g.drawString(i + "", count1p * 55, 25);
 
@@ -437,7 +460,7 @@ public class GameWalkthrough extends JPanel {
 		JFrame gameFrame = new JFrame();
 		gameFrame.setResizable(false);
 		gameFrame.setSize(1100, 740);
-		gameFrame.add(new GameWalkthrough(new ExpectiminimaxAgent(), new RandomAgent()));
+		gameFrame.add(new GameWalkthrough(new RandomAgent(), new RandomAgent()));
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}
