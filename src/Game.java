@@ -16,7 +16,7 @@ public class Game {
 		System.out.println(Board.printBoard(Board.boardA));
 		//agent2 = new ReinforcementLearningAgent(2);
 //		System.out.println("agent2 " + agent2.learner.states.size());
-	System.out.println(getPercentageWon(1000));
+	System.out.println(getPercentageWon(100));
 //	 System.out.println("agent1 " + agent1.learner.states.size());
 //	 System.out.println("agent2 " + agent2.learner.states.size());
 //	 if(agent1.learner.states.keySet().equals(agent2.learner.states.keySet())){

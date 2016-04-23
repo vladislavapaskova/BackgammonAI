@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class BoardState {
@@ -289,6 +290,17 @@ public class BoardState {
 			}
 		}
 		return copy;
+	}
+	
+	/*
+	 * Prints the current state of the board
+	 */
+	public static String printBoard(Stack[] board) {
+		String print = "";
+		for (int i = 0; i < board.length; i++) {
+			print += Arrays.toString(board[i].toArray());
+		}
+		return print;
 	}
 
 }

@@ -27,6 +27,13 @@ public class ExpectiminimaxAgent extends Agent {
 				Board.winPlayer2, Board.finalPlayer1, Board.finalPlayer2);
 		diceRoll = Board.dieRoll();
 		playingPos = move(bs, diceRoll);
+		//System.out.println("BoardState"+bs.printBoard(bs.gameBoard));
+		//System.out.println("\n\n\n\n\n");
+		//System.out.println("BoardState"+Board.printBoard(Board.boardA));
+		
+		if(playingPos==(-1)){
+			return -1; 
+		}
 		if (outPieces == 0) {
 			if ((finalSix + winPiece) != 15) {
 				if (numPlayer == 1) {
@@ -174,6 +181,11 @@ public class ExpectiminimaxAgent extends Agent {
 		int finalMove=0; 
 		Node bestNode=null; 
 		
+		//this is if there are no available moves
+		if(list.isEmpty()){
+			return -1; 
+		}
+		
 		double maxVal = Double.NEGATIVE_INFINITY;
 		double tempVal; 
 		
@@ -181,25 +193,22 @@ public class ExpectiminimaxAgent extends Agent {
 		{
 			
 			int move = list.get(i);
-				if(board.checkIfPieceCanMove(numPlayer, move+dieRoll))
-				{
-					tempBoard=board.copyBoardState(board);
-					tempBoard.movePiece(numPlayer, move, dieRoll);
-					tempMove=move; 
+			tempBoard=board.copyBoardState(board);
+			tempBoard.movePiece(numPlayer, move, dieRoll);
+			tempMove=move; 
 			
-					tempNode=new MaxNode(tempBoard); 
-					tempVal = minimaxValue(tempNode,1);
+			tempNode=new MaxNode(tempBoard); 
+			tempVal = minimaxValue(tempNode,1);
 
 					
-					if(tempVal > maxVal)
-					{
-						bestNode = tempNode;
-						maxVal = tempVal;
-						finalMove=tempMove; 
-					}
-				}
+			if(tempVal > maxVal)
+			{
+				bestNode = tempNode;
+				maxVal = tempVal;
+				finalMove=tempMove; 
+			}
 		}
-		System.out.println("final move"+finalMove);
+		//System.out.println("final move"+finalMove);
 		return finalMove; 
 	}
 	

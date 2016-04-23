@@ -8,11 +8,7 @@ public abstract class Node {
 	public boolean isMinNode;
 	public boolean isMaxNode;
 	
-	public List<Node> expand() {
-		// TODO Auto-generated method stub
-		System.out.println("hereeee");
-		return null;
-	}
+	public abstract List<Node> expand();
 	
 	
 	

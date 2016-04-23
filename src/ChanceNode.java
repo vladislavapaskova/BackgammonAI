@@ -43,22 +43,18 @@ public class ChanceNode extends Node{
 		for(int i=0; i<list.size();i++)
 		{
 			int move = list.get(i);
-				if(board.checkIfPieceCanMove(numPlayer, move+dieRoll))
-				{
-					Node node; 
-					System.out.println(move);
-					temp=board.copyBoardState(board);
-					temp.movePiece(numPlayer, move, dieRoll);
+			Node node; 
+			temp=board.copyBoardState(board);
+			temp.movePiece(numPlayer, move, dieRoll);
 					
-					if(minNode==null){
-						node= new MinNode(temp); 
-					}
-					else{
-						node= new MaxNode(temp);
-					}
+			if(minNode==null){
+				node= new MinNode(temp); 
+			}
+			else{
+				node= new MaxNode(temp);
+			}
 
-					listOfPossibleBoards.add(node);
-				}
+			listOfPossibleBoards.add(node);
 		}
 		return listOfPossibleBoards;
 	}
