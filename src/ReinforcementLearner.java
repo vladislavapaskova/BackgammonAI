@@ -40,8 +40,6 @@ public class ReinforcementLearner {
 		for (int i = 0; i < itterations; i++) {
 			moves.push(start);
 			State current = start;
-			// Play the game, pushing the states of the moves of the player on
-			// to a stack
 			while (Board.gameWon() == 0) {
 				if (numPlayer == 1) {
 					current = start.apply(agent1, 1);
@@ -85,20 +83,11 @@ public class ReinforcementLearner {
 					} else {
 						reward = -1.0;
 					}
-					if( previousOut < s.numOut){
-						//System.out.println("previous out" + previousOut);
-					//	System.out.println("current out" + s.numOut);
-					//	System.out.println("count" + count++);
-						//reward -= 5;
-					}
 				} else {
 					if (s.pieceLandedOn == 1) {
 						reward = 10.0;
 					} else {
 						reward = -1.0;
-					}
-					if( previousOut < s.numOut){
-						//reward -= 5;
 					}
 				}
 				previousOut = s.numOut;

@@ -5,7 +5,6 @@ import java.util.Stack;
 public class Board {
 	// game board
 	static Stack<Integer>[] boardA;
-	
 
 	// board size
 	static final int BOARDSIZE = 24;
@@ -14,7 +13,7 @@ public class Board {
 	static int outPlayer1;
 	static int outPlayer2;
 
-	// pieces that the player has managed to get out;count towards winning
+	// pieces that the player has managed to get out count towards winning
 	static int winPlayer1;
 	static int winPlayer2;
 
@@ -22,13 +21,10 @@ public class Board {
 	// pieces out towards winning
 	static int finalPlayer1;
 	static int finalPlayer2;
-	
+
 	static int diceRoll;
 	static int itterations;
 
-	/*
-	 * Board constructor
-	 */
 	public Board() {
 		initializeGame();
 		itterations = 0;
@@ -60,6 +56,7 @@ public class Board {
 			return 0;
 		}
 	}
+
 	/*
 	 * Checks who won the game
 	 */
@@ -131,8 +128,8 @@ public class Board {
 	public static int dieRoll() {
 		return (1 + (int) (Math.random() * 6));
 	}
-	
-	public static void reset(){
+
+	public static void reset() {
 		initializeGame();
 	}
 

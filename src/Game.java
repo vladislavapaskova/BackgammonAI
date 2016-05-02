@@ -1,30 +1,18 @@
 
 public class Game {
 
-	RandomAgent agent2;
-    ExpectiminimaxAgent agent1;
-	//ReinforcementLearningAgent agent2;
-	//RandomAgent agent1;
+	ExpectiminimaxAgent agent1;
+	ReinforcementLearningAgent agent2;
 
-	//
+	/*
+	 * NOTE: The agents and game iterations can be changed here. For example you
+	 * can choose two completely idfferent agents
+	 */
 	public Game() {
-		// learner = new ReinforcementLearner();
 		Board.reset();
 		agent1 = new ExpectiminimaxAgent();
-		//agent1 = new RandomAgent();
-		agent2 = new RandomAgent();
-		System.out.println(Board.printBoard(Board.boardA));
-		//agent2 = new ReinforcementLearningAgent(2);
-//		System.out.println("agent2 " + agent2.learner.states.size());
-	System.out.println(getPercentageWon(100));
-//	 System.out.println("agent1 " + agent1.learner.states.size());
-//	 System.out.println("agent2 " + agent2.learner.states.size());
-//	 if(agent1.learner.states.keySet().equals(agent2.learner.states.keySet())){
-//	 System.out.println("equal");
-//	 }else{
-//	 System.out.println("notequal");
-	// }
-
+		agent2 = new ReinforcementLearningAgent(2);
+		System.out.println(getPercentageWon(100));
 	}
 
 	public double getPercentageWon(double itterations) {

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class RandomAgent extends Agent {
@@ -171,15 +172,13 @@ public class RandomAgent extends Agent {
 		}
 		return diceRoll;
 	}
+
 	int count = 0;
 
 	/*
-	 * USED FOR REINFORCEMENT LEARNING - Might be changed later
+	 * Used for reinforcement learning
 	 */
 	public Integer[] applyAction(int numPlayer) {
-//		if(numPlayer == 2){
-//		System.out.println(numPlayer + " " + count++);
-//		}
 		Integer[] changes = new Integer[4];
 		int start = -1;
 		int end = -1;
@@ -250,7 +249,8 @@ public class RandomAgent extends Agent {
 					}
 					Board.boardA[playingPos].pop();
 					start = playingPos;
-					if (!Board.boardA[playingPos - diceRoll].isEmpty() && Board.boardA[playingPos - diceRoll].peek() == 1) {
+					if (!Board.boardA[playingPos - diceRoll].isEmpty()
+							&& Board.boardA[playingPos - diceRoll].peek() == 1) {
 						if ((playingPos - diceRoll) > 17) {
 							Board.finalPlayer1--;
 						}
@@ -293,8 +293,8 @@ public class RandomAgent extends Agent {
 						} else {
 							changes[0] = outPieces;
 							changes[1] = playingPos;
-							changes[2] = 26; // game won
-							changes[3] = 26; // game won
+							changes[2] = 25; // game won
+							changes[3] = 25; // game won
 							return changes;
 						}
 					} else {
@@ -331,8 +331,8 @@ public class RandomAgent extends Agent {
 						} else {
 							changes[0] = outPieces;
 							changes[1] = playingPos;
-							changes[2] = -3; // game won
-							changes[3] = -3;
+							changes[2] = -2; // game won
+							changes[3] = -2;
 							return changes;
 						}
 					} else {
@@ -400,25 +400,20 @@ public class RandomAgent extends Agent {
 		changes[1] = start; // starting pos
 		changes[2] = end; // ending pos
 		if (changes[3] == null) {
-			changes[3] = getEndColor(Board.boardA[end]); // piece landed on red
-															// = 1 white
-			// = 2 empty = 0 cant move = -1
+			changes[3] = getEndColor(Board.boardA[end]);
 		}
 		return changes;
 
 	}
-	
-	public int getOutPieces(int player){
-		if(player == 1){
+
+	public int getOutPieces(int player) {
+		if (player == 1) {
 			return Board.outPlayer1;
-		}else{
+		} else {
 			return Board.outPlayer2;
 		}
 	}
 
-	/*
-	 * USED FOR TESTING PURPOSES
-	 */
 	public String arrString(ArrayList list) {
 		String str = "";
 		for (int i = 0; i < list.size(); i++) {

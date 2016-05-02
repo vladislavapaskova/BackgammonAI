@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,6 +14,7 @@ import java.util.Stack;
 import javax.swing.Timer;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +33,11 @@ public class GameWalkthrough extends JPanel {
 	private int currentPlayer = 1;
 	private Image player1;
 	private Image player2;
+	private Image title;
+	private Image game1p;
+	private Image game2p;
+	private Image game3p;
+	private Image game4p;
 	private Image finishedRedImg;
 	private Image finishedWhiteImg;
 	private JPanel submitMovePanel;
@@ -43,20 +50,18 @@ public class GameWalkthrough extends JPanel {
 	private Board board = new Board();
 	int count = 0;
 
-	public GameWalkthrough(Agent agent1, Agent agent2) {
+	public GameWalkthrough() {
 		super(new BorderLayout(0, 0));
 		setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, new Color(191, 159, 82)));
 		add(offBoardPieces(), BorderLayout.EAST);
 		setBackground(new Color(7, 19, 48));
-		this.agent1 = agent1;
-		this.agent2 = agent2;
-		startGame();
+		add(initGamePanel(), BorderLayout.CENTER);
+		add(offBoardPieces(), BorderLayout.EAST);
 	}
 
 	public void startGame() {
-		timer = new Timer(100, new ActionListener() {
+		timer = new Timer(300, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (count > 5) {
 					if (Board.gameWon() != 0) {
 						JOptionPane.showMessageDialog(submitMovePanel,
 								"Congratulations player " + Board.gameWon() + "! You won!");
@@ -65,13 +70,96 @@ public class GameWalkthrough extends JPanel {
 						rollDiceandMove(currentPlayer);
 						getNextPlayer();
 					}
-
-				} else {
-					count++;
-				}
 			}
 		});
 		timer.start();
+	}
+
+	public JPanel initGamePanel() {
+		JPanel background = new JPanel();
+		background.setBackground(new Color(10, 25, 64));
+		background.setLayout(new BoxLayout(background, BoxLayout.PAGE_AXIS));
+		File back = new File("images/Backgammon.png");
+		try {
+			title = ImageIO.read(back);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JLabel game = new JLabel(new ImageIcon(title));
+		background.add(game);
+		File ranvsran = new File("images/randomvsrandom.png");
+		try {
+			game1p = ImageIO.read(ranvsran);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JButton rvsr = new JButton(new ImageIcon(game1p));
+		rvsr.setBorderPainted(false);
+		rvsr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				agent1 = new RandomAgent();
+				agent2 = new RandomAgent();
+				startGame();
+				remove(background);
+			}
+		});
+		background.add(rvsr);
+		File expvsran = new File("images/exvsran.png");
+		try {
+			game2p = ImageIO.read(expvsran);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JButton expvsr = new JButton(new ImageIcon(game2p));
+		expvsr.setBorderPainted(false);
+		expvsr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				agent1 = new ExpectiminimaxAgent();
+				agent2 = new RandomAgent();
+				startGame();
+				remove(background);
+
+			}
+		});
+		background.add(expvsr);
+		File revsran = new File("images/revsran.png");
+		try {
+			game3p = ImageIO.read(revsran);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JButton reinvsran = new JButton(new ImageIcon(game3p));
+		reinvsran.setBorderPainted(false);
+		reinvsran.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				agent1 = new ReinforcementLearningAgent(1);
+				agent2 = new RandomAgent();
+				startGame();
+				remove(background);
+
+			}
+		});
+		background.add(reinvsran);
+		File expvsre = new File("images/exvsre.png");
+		try {
+			game4p = ImageIO.read(expvsre);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JButton evsr = new JButton(new ImageIcon(game4p));
+		evsr.setBorderPainted(false);
+		evsr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				agent1 = new ExpectiminimaxAgent();
+				agent2 = new ReinforcementLearningAgent(2);
+				startGame();
+				remove(background);
+
+			}
+		});
+		background.add(evsr);
+		return background;
+
 	}
 
 	public void rollDiceandMove(int currentPlayer) {
@@ -384,7 +472,7 @@ public class GameWalkthrough extends JPanel {
 					g.setFont(new Font("default", Font.BOLD, 20));
 					g.setColor(Color.BLACK);
 					int s = count - 4;
-					g.drawImage(color, count2p * 55, y+60, null);
+					g.drawImage(color, count2p * 55, y + 60, null);
 					g.drawString(s + "", count2p * 55 + 18, y + 90);
 				}
 				count++;
@@ -422,8 +510,8 @@ public class GameWalkthrough extends JPanel {
 					g.setFont(new Font("default", Font.BOLD, 20));
 					g.setColor(Color.BLACK);
 					int s = count - 4;
-					g.drawImage(color, count1p * 55, y-60, null);
-					g.drawString(s + "", (count1p * 55) + 18 , y - 30);
+					g.drawImage(color, count1p * 55, y - 60, null);
+					g.drawString(s + "", (count1p * 55) + 18, y - 30);
 				}
 				count++;
 				stack.push(p);
@@ -460,7 +548,7 @@ public class GameWalkthrough extends JPanel {
 		JFrame gameFrame = new JFrame();
 		gameFrame.setResizable(false);
 		gameFrame.setSize(1100, 740);
-		gameFrame.add(new GameWalkthrough(new RandomAgent(), new RandomAgent()));
+		gameFrame.add(new GameWalkthrough());
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}

@@ -3,9 +3,8 @@ import java.util.List;
 
 public class ExpectiminimaxAgent extends Agent {
 
-	int MAX_DEPTH=6;
+	int MAX_DEPTH = 2;
 
-	
 	@Override
 	public int movePiece(int numPlayer) {
 		int finalSix;
@@ -22,17 +21,13 @@ public class ExpectiminimaxAgent extends Agent {
 			finalSix = Board.finalPlayer2;
 			outPieces = Board.outPlayer2;
 		}
-		// set the dice roll
 		BoardState bs = new BoardState(Board.boardA, Board.outPlayer1, Board.outPlayer2, Board.winPlayer1,
 				Board.winPlayer2, Board.finalPlayer1, Board.finalPlayer2);
 		diceRoll = Board.dieRoll();
 		playingPos = move(bs, diceRoll);
-		//System.out.println("BoardState"+bs.printBoard(bs.gameBoard));
-		//System.out.println("\n\n\n\n\n");
-		//System.out.println("BoardState"+Board.printBoard(Board.boardA));
-		
-		if(playingPos==(-1)){
-			return -1; 
+
+		if (playingPos == (-1)) {
+			return -1;
 		}
 		if (outPieces == 0) {
 			if ((finalSix + winPiece) != 15) {
@@ -168,159 +163,138 @@ public class ExpectiminimaxAgent extends Agent {
 			}
 		}
 		return diceRoll;
-	} 
+	}
 
-	
-	public int move(BoardState board, int dieRoll){
-		int numPlayer=1;
+	public int move(BoardState board, int dieRoll) {
+		int numPlayer = 1;
 		ArrayList<Integer> list = board.checkMovingPositions(numPlayer);
-		
-		Node tempNode;
-		BoardState tempBoard; 
-		int tempMove; 
-		int finalMove=0; 
-		Node bestNode=null; 
-		
-		//this is if there are no available moves
-		if(list.isEmpty()){
-			return -1; 
-		}
-		
-		double maxVal = Double.NEGATIVE_INFINITY;
-		double tempVal; 
-		
-		for(int i=0; i<list.size();i++)
-		{
-			
-			int move = list.get(i);
-			tempBoard=board.copyBoardState(board);
-			tempBoard.movePiece(numPlayer, move, dieRoll);
-			tempMove=move; 
-			
-			tempNode=new MaxNode(tempBoard); 
-			tempVal = minimaxValue(tempNode,1);
 
-					
-			if(tempVal > maxVal)
-			{
+		Node tempNode;
+		BoardState tempBoard;
+		int tempMove;
+		int finalMove = 0;
+		Node bestNode = null;
+
+		// this is if there are no available moves
+		if (list.isEmpty()) {
+			return -1;
+		}
+
+		double maxVal = Double.NEGATIVE_INFINITY;
+		double tempVal;
+
+		for (int i = 0; i < list.size(); i++) {
+
+			int move = list.get(i);
+			tempBoard = board.copyBoardState(board);
+			tempBoard.movePiece(numPlayer, move, dieRoll);
+			tempMove = move;
+
+			tempNode = new MaxNode(tempBoard);
+			tempVal = minimaxValue(tempNode, 0);
+
+			if (tempVal > maxVal) {
 				bestNode = tempNode;
 				maxVal = tempVal;
-				finalMove=tempMove; 
+				finalMove = tempMove;
 			}
 		}
-		//System.out.println("final move"+finalMove);
-		return finalMove; 
+		return finalMove;
 	}
-	
+
 	/*
 	 * computing minimax value
 	 */
-	public double minimaxValue(Node n, int depth){
-		//System.out.println(n.board.outPlayer1);
-		if(depth == MAX_DEPTH)
-		{
+	public double minimaxValue(Node n, int depth) {
+		if (depth == MAX_DEPTH) {
 			return heuristic3(n.board, 1);
 		}
 
-		if(n.isChanceNode==true) // chance node
+		if (n.isChanceNode == true) // chance node
 		{
 			double v = 0.0;
-			List<Node> list = new ArrayList<Node>(); 
-			list = n.expand(); 
-			
-			for(int i=0; i<list.size(); i++){
-				v+=minimaxValue(list.get(i), depth+1)/list.size(); 
-			}
-			
-			return v;
-			
-		}
-		else if(n.isMinNode==true) // min node
-		{
-			double v = Double.POSITIVE_INFINITY;
-			List<Node> list = new ArrayList<Node>(); 
-			list = n.expand(); 
-			
-			for(int i=0; i<list.size(); i++){
-				v=Math.min(v, minimaxValue(list.get(i), depth+1));
+			List<Node> list = new ArrayList<Node>();
+			list = n.expand();
+
+			for (int i = 0; i < list.size(); i++) {
+				v += minimaxValue(list.get(i), depth + 1) / list.size();
 			}
 
 			return v;
-		}
-		else
+
+		} else if (n.isMinNode == true) // min node
 		{
+			double v = Double.POSITIVE_INFINITY;
+			List<Node> list = new ArrayList<Node>();
+			list = n.expand();
+
+			for (int i = 0; i < list.size(); i++) {
+				v = Math.min(v, minimaxValue(list.get(i), depth + 1));
+			}
+
+			return v;
+		} else {
 			double v = Double.NEGATIVE_INFINITY;
-			List<Node> list = new ArrayList<Node>(); 
-			list = n.expand(); 
-			
-			for(int i=0; i<list.size(); i++){
-				v=Math.max(v, minimaxValue(list.get(i), depth+1));
+			List<Node> list = new ArrayList<Node>();
+			list = n.expand();
+
+			for (int i = 0; i < list.size(); i++) {
+				v = Math.max(v, minimaxValue(list.get(i), depth + 1));
 			}
 
 			return v;
 		}
 	}
-	
-	
+
 	/*
 	 * This strategy tries to take out players pieces
 	 */
-	public double heuristic1(BoardState board, int numPlayer)
-	{
-		double heuristic=0.0; 
-		if(numPlayer==1)
-		{
-			heuristic+=board.finalPlayer1*50; 
-			heuristic+=board.outPlayer2*10; 
+	public double heuristic1(BoardState board, int numPlayer) {
+		double heuristic = 0.0;
+		if (numPlayer == 1) {
+			heuristic += board.finalPlayer1 * 50;
+			heuristic += board.outPlayer2 * 10;
+		} else {
+			heuristic += board.finalPlayer2 * 50;
+			heuristic += board.outPlayer1 * 10;
 		}
-		else
-		{
-			heuristic+=board.finalPlayer2*50;
-			heuristic+=board.outPlayer1*10; 
-		}
-		return heuristic; 
+		return heuristic;
 	}
-	
+
 	/*
-	 * This strategy tries to make the player move their pieces into the final six positions
+	 * This strategy tries to make the player move their pieces into the final
+	 * six positions
 	 */
-	public double heuristic2(BoardState board, int numPlayer)
-	{
-		double heuristic=0.0; 
-		if(numPlayer==1)
-		{
-			heuristic+=board.finalPlayer1*5;  
+	public double heuristic2(BoardState board, int numPlayer) {
+		double heuristic = 0.0;
+		if (numPlayer == 1) {
+			heuristic += board.finalPlayer1 * 5;
+		} else {
+			heuristic += board.finalPlayer2 * 5;
 		}
-		else
-		{
-			heuristic+=board.finalPlayer2*5; 
-		}
-		return heuristic; 
+		return heuristic;
 	}
-	
+
 	/*
-	 * This strategy tries to take out more of the other player's pieces and also get pieces in the final six
+	 * This strategy tries to take out more of the other player's pieces and
+	 * also get pieces in the final six
 	 */
-	public double heuristic3(BoardState board, int numPlayer)
-	{
-		double heuristic=0.0; 
-		if(numPlayer==1)
-		{
-			heuristic+=board.finalPlayer1*10; 
-			heuristic+=board.outPlayer2*50; 
+	public double heuristic3(BoardState board, int numPlayer) {
+		double heuristic = 0.0;
+		if (numPlayer == 1) {
+			heuristic += board.finalPlayer1 * 10;
+			heuristic += board.outPlayer2 * 50;
+		} else {
+			heuristic += board.finalPlayer2 * 10;
+			heuristic += board.outPlayer1 * 50;
 		}
-		else
-		{
-			heuristic+=board.finalPlayer2*10;
-			heuristic+=board.outPlayer1*50; 
-		}
-		return heuristic; 
+		return heuristic;
 	}
-	
+
 	@Override
 	public String movePiece(int Player, int position, int dieRoll) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

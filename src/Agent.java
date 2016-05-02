@@ -22,6 +22,7 @@ public abstract class Agent {
 
 	}
 
+	
 	/*
 	 * Checks if a piece can move from this position
 	 */

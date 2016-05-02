@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Stack;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -48,14 +49,87 @@ public class BackgammonGUI extends JPanel {
 	private JLabel offBoardPiecesP2;
 	private Agent agent1;
 	private Agent agent2;
+	private Image title;
+	private Image game1p;
+	private Image game2p;
+	private Image game3p;
 
-	public BackgammonGUI(Agent agent1, Agent agent2) {
+	public BackgammonGUI() {
 		super(new BorderLayout(0, 0));
 		setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, new Color(191, 159, 82)));
 		add(offBoardPieces(), BorderLayout.EAST);
+		add(initGamePanel(), BorderLayout.CENTER);
 		setBackground(new Color(7, 19, 48));
-		this.agent1 = agent1;
-		this.agent2 = agent2;
+
+	}
+
+	public JPanel initGamePanel() {
+		JPanel background = new JPanel();
+		background.setBackground(new Color(10, 25, 64));
+		background.setLayout(new BoxLayout(background, BoxLayout.PAGE_AXIS));
+		File back = new File("images/Backgammon.png");
+		try {
+			title = ImageIO.read(back);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JLabel game = new JLabel(new ImageIcon(title));
+		background.add(game);
+		File ranvsran = new File("images/rand.png");
+		try {
+			game1p = ImageIO.read(ranvsran);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JButton rvsr = new JButton(new ImageIcon(game1p));
+		rvsr.setBorderPainted(false);
+		rvsr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				System.out.println("here");
+				agent1 = new HumanAgent();
+				agent2 = new RandomAgent();
+				remove(background);
+				repaint();
+			}
+		});
+		background.add(rvsr);
+		File revsran = new File("images/exp.png");
+		try {
+			game2p = ImageIO.read(revsran);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JButton reinvsran = new JButton(new ImageIcon(game2p));
+		reinvsran.setBorderPainted(false);
+		reinvsran.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				agent1 = new HumanAgent();
+				agent2 = new ExpectiminimaxAgent();
+				remove(background);
+				repaint();
+
+			}
+		});
+		background.add(reinvsran);
+		File expvsre = new File("images/reinf.png");
+		try {
+			game3p = ImageIO.read(expvsre);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		JButton evsr = new JButton(new ImageIcon(game3p));
+		evsr.setBorderPainted(false);
+		evsr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				agent1 = new HumanAgent();
+				agent2 = new ReinforcementLearningAgent(2);
+				remove(background);
+				repaint();
+
+			}
+		});
+		background.add(evsr);
+		return background;
 
 	}
 
@@ -100,7 +174,7 @@ public class BackgammonGUI extends JPanel {
 				if (currentPlayer == 1) {
 					numToMove = Integer.parseInt(pieceToMove.getText());
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(300);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -179,7 +253,7 @@ public class BackgammonGUI extends JPanel {
 					diceRollPanel.add(submitPanel);
 				} else {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(300);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -189,7 +263,7 @@ public class BackgammonGUI extends JPanel {
 					diceRollPanel.add(rollDice);
 					agent1.movePiece(1, -1, diceRoll);
 					try {
-						Thread.sleep(500);
+						Thread.sleep(300);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -207,9 +281,6 @@ public class BackgammonGUI extends JPanel {
 		return diceRollPanel;
 	}
 
-	public void refreshoffBoardImages() {
-
-	}
 
 	/*
 	 * Displays pieces which have moved to their final state
@@ -417,9 +488,7 @@ public class BackgammonGUI extends JPanel {
 
 	/*
 	 * Does the painting of the pieces on the board as well as the numbers and
-	 * the boxes around positions to move (non-Javadoc)
-	 * 
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 * the boxes around positions to move
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
@@ -549,7 +618,7 @@ public class BackgammonGUI extends JPanel {
 		JFrame gameFrame = new JFrame();
 		gameFrame.setResizable(false);
 		gameFrame.setSize(1100, 740);
-		gameFrame.add(new BackgammonGUI(new HumanAgent(), new RandomAgent()));
+		gameFrame.add(new BackgammonGUI());
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
 	}

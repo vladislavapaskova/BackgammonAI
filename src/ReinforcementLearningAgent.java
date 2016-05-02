@@ -31,7 +31,6 @@ public class ReinforcementLearningAgent extends Agent {
 		if (outPieces == 0) {
 			if ((finalSix + winPiece) != 15) {
 				availablePos = piecesThatCanMove(numPlayer, diceRoll);
-			//	System.out.println("Player " + numPlayer + " moves " + arrString(availablePos));
 			} else {
 				availablePos = piecesThatCanMoveOffBoard(numPlayer, diceRoll);
 			}
@@ -74,7 +73,6 @@ public class ReinforcementLearningAgent extends Agent {
 					}
 				}
 				key = pos.toString() + "," + end.toString() + "," + endColor.toString();
-			//	System.out.println("  key  " + key + "  value  " + learner.states.get(key));
 				Double temp = best.doubleValue();
 				if (learner.states.get(key) != null) {
 					best = java.lang.Math.max(learner.states.get(key), best);
@@ -84,7 +82,6 @@ public class ReinforcementLearningAgent extends Agent {
 				}
 			}
 			playingPos = bestPieceToMove;
-		//	System.out.println("BEST " +bestPieceToMove + "\n");
 			if ((finalSix + winPiece) != 15) {
 				if (numPlayer == 1) {
 					Board.boardA[playingPos].pop();
@@ -273,9 +270,6 @@ public class ReinforcementLearningAgent extends Agent {
 		return null;
 	}
 
-	/*
-	 * USED FOR TESTING PURPOSES
-	 */
 	public String arrString(ArrayList list) {
 		String str = "";
 		for (int i = 0; i < list.size(); i++) {
